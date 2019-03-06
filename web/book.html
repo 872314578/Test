@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="renderer" content="webkit">
+    <title></title>
+    <link rel="stylesheet" href="css/pintuer.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <script src="js/jquery.js"></script>
+    <script src="js/pintuer.js"></script>
+</head>
+
+<body>
+<form method="post" action="">
+    <div class="panel admin-panel">
+        <div class="panel-head"><strong class="icon-reorder"> 留言管理</strong></div>
+        <div class="padding border-bottom">
+            <ul class="search">
+                <li>
+                    <button type="button" class="button border-green" id="checkall"><span class="icon-check"></span> 全选
+                    </button>
+                    <button type="submit" class="button border-red"><span class="icon-trash-o"></span> 批量删除</button>
+                </li>
+            </ul>
+        </div>
+        <table class="table table-hover text-center">
+            <tr>
+                <th width="120">ID</th>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>邮箱</th>
+                <th>其他</th>
+                <th width="25%">内容</th>
+                <th width="120">留言时间</th>
+                <th>操作</th>
+            </tr>
+
+
+        </table>
+    </div>
+</form>
+
+</body>
+<script type="text/javascript">
+    $.get("wordAction", function (words) {
+        for (var i = 0; i < words.length; i++) {
+            var word = words[i];
+            var tr = $("<tr></tr>");
+            var id = $("<td><input type='checkbox' name='follow'/>" + word.id + "</td>");
+            var name = $("<td><input type='checkbox' name='follow'/>" + word.name + "</td>");
+            var phone = $("<td><input type='checkbox' name='follow'/>" + word.phone + "</td>");
+            var email = $("<td><input type='checkbox' name='follow'/>" + word.email + "</td>");
+            var other = $("<td><input type='checkbox' name='follow'/>" + word.other + "</td>");
+            var content = $("<td><input type='checkbox' name='follow'/>" + word.content + "</td>");
+            var data = $("<td><input type='checkbox' name='follow'/>" + word.date + "</td>");
+            var deleteButton = $("<td><button name='delete' id='delete-" + word.id + "'>删除</button></td>");
+            tr.append(id);
+            tr.append(name);
+            tr.append(phone);
+            tr.append(email);
+            tr.append(other);
+            tr.append(content);
+            tr.append(data);
+            tr.append(deleteButton);
+            $("table").append(tr);
+            deleteDocument($("#delete-" + word.id));
+        }
+    }, "json");
+
+    function deleteDocument(btn) {
+        btn.click(function () {
+            $.get("deleteWordAction", {"id": btn.attr('id')}, function () {
+                //移除当前行
+                btn.parent().parent().remove();
+            });
+        });
+    }
+</script>
+</html>
